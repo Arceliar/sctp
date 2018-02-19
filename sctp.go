@@ -599,6 +599,16 @@ func (c *SCTPConn) SetWriteDeadline(t time.Time) error {
 	return syscall.EOPNOTSUPP
 }
 
+func (c *SCTPConn) SetNoDelay(nodelay bool) error {
+	var arg int
+	if nodelay {
+		arg = 1
+	}
+	arglen := unsafe.Sizeof(arg)
+	_, _, err := setsockopt(c.fd(), SCTP_NODELAY, uintptr(unsafe.Pointer(&arg)), uintptr(arglen))
+	return err
+}
+
 type SCTPListener struct {
 	fd int
 	m  sync.Mutex
