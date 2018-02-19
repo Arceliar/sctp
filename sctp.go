@@ -609,6 +609,12 @@ func (c *SCTPConn) SetNoDelay(nodelay bool) error {
 	return err
 }
 
+func (c *SCTPConn) SetMaxSeg(maxSeg int) error {
+	arglen := unsafe.Sizeof(maxSeg)
+	_, _, err := setsockopt(c.fd(), SCTP_MAXSEG, uintptr(unsafe.Pointer(&maxSeg)), uintptr(arglen))
+	return err
+}
+
 type SCTPListener struct {
 	fd int
 	m  sync.Mutex
